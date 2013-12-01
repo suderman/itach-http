@@ -1,0 +1,19 @@
+# Disable fancy indexes, so /index.php gets a chance...
+Options -Indexes
+<IfModule mod_rewrite.c>
+	<IfModule mod_dir.c>
+		DirectoryIndex index.php index.html index.htm default.htm default.html default.asp /index.php
+	</IfModule>
+	
+	RewriteEngine on
+	RewriteBase /
+
+	# don't serve /index.php if the request is for a real directory
+	# (allows the DirectoryIndex lookup to function)
+	RewriteCond %{REQUEST_FILENAME} !-d
+	# don't serve /index.php if the request is for a real file
+	# (allows the actual file to be served)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	# anything else is handed to /index.php for resolution
+	RewriteRule ^(.*)$ /index.php [L,QSA]
+</IfModule>
